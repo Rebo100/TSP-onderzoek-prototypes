@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 import java.util.Random;
+//Code van stackoverflow https://stackoverflow.com/questions/11703827/brute-force-algorithm-for-the-traveling-salesman-problem-in-java
+//Hier en daar zelf toevoegingen gedaan
 
-
-//https://stackoverflow.com/questions/11703827/brute-force-algorithm-for-the-traveling-salesman-problem-in-java
 public class Test {
     static final long startTime = System.nanoTime();
     static Point[] input = new Point[4];
@@ -94,7 +94,6 @@ public class Test {
 
 
 
-        //Code from stackoverflow
         ArrayList<Integer> lst = new ArrayList<Integer>();
         for (int i = 1; i <=3; ++i)
             lst.add(i);
@@ -102,7 +101,7 @@ public class Test {
         bruteForceFindBestRoute(route, lst);
 
 
-        //My code
+
         final long duration = System.nanoTime() - startTime; //Stop timer!
         System.out.println("\n\nBest distance: "+bestDistance);
         System.out.println("Beste route: ");
