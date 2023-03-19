@@ -1,1 +1,85 @@
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
+public class Greedy {
+
+    static Point[] input = new Point[4];
+    static Point origin;
+
+    public static void main(String[] args) {
+        long startTimer = System.nanoTime();
+        Random random = new Random();
+        input[0] = new Point(0, 0);
+        for (int i = 1; i <= 3; i++) {
+            input[i] = new Point(random.nextInt(1, 5), random.nextInt(1, 5));
+        }
+
+        System.out.println("Cities:");
+        for (Point p : input) {
+            System.out.println(p);
+        }
+
+        Point position = input[0];
+        List<Point> visitedPosition = new ArrayList<>();
+        double totalDistance = 0;
+        visitedPosition.add(position);
+
+
+
+        while (visitedPosition.size() < 4) {
+            double minDistance = Double.MAX_VALUE;
+            Point nextPosition = null;
+
+            for (Point p : input) {
+                if (!visitedPosition.contains(p)) {
+                    double distance = calcDistance(position, p);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nextPosition = p;
+                    }
+                }
+            }
+
+            visitedPosition.add(nextPosition);
+            totalDistance += minDistance;
+            position = nextPosition;
+        }
+
+        long endTimer = System.nanoTime();
+
+        System.out.println("Bezochte punten: ");
+        for (Point visited : visitedPosition) {
+            System.out.print("(" + visited + ") ");
+        }
+
+        double distanceToOrigin = calcDistance(position, input[0]);
+        totalDistance += distanceToOrigin;
+        System.out.println("\nTotale aftand: " + totalDistance);
+        double moi = (endTimer - startTimer) / 1000000.0;
+
+        System.out.println("Tijd: " + (moi) + " millisecondes");
+    }
+
+    public static double calcDistance(Point a, Point b) {
+        double x;
+        double y;
+        if (a.getX() >= b.getX()) {
+            x = a.getX() - b.getX();
+        } else {
+            x = b.getX() - a.getX();
+        }
+
+        if (a.getY() >= b.getY()) {
+            y = a.getY() - b.getY();
+        } else {
+            y = b.getY() - a.getY();
+        }
+
+        double distance = Math.sqrt(x * x + y * y);
+        distance = Math.round(distance * 100);
+        distance = distance / 100;
+        return distance;
+    }
+}
