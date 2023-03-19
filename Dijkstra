@@ -1,0 +1,101 @@
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+
+public class Dijkstra {
+
+    static Point[] input = new Point[4];
+    static Point origin;
+
+    public static void main(String[] args) {
+        long startTimer = System.nanoTime();
+        input[0] = new Point(0, 0);
+        for (int i = 1; i <= 3; i++) {
+            input[i] = new Point((int) (Math.random() * 4) + 1, (int) (Math.random() * 4) + 1);
+        }
+
+        System.out.println("Cities:");
+        for (Point p : input) {
+            System.out.println(p);
+        }
+
+        // initialisatie van Dijkstra
+        double[] distances = new double[4];
+        boolean[] visited = new boolean[4];
+        int[] previous = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            distances[i] = Double.POSITIVE_INFINITY;
+            visited[i] = false;
+            previous[i] = -1;
+        }
+
+        distances[0] = 0;
+
+        // PriorityQueue gebruiken om de punten in volgorde van afstand te krijgen
+        PriorityQueue<Integer> queue = new PriorityQueue<>(4, (a, b) -> Double.compare(distances[a], distances[b]));
+        queue.add(0);
+
+        while (!queue.isEmpty()) {
+            int index = queue.poll();
+            visited[index] = true;
+
+            for (int i = 0; i < 4; i++) {
+                if (i != index) {
+                    double distance = calcDistance(input[index], input[i]);
+                    if (!visited[i]) {
+                        double newDistance = distances[index] + distance;
+                        if (newDistance < distances[i]) {
+                            distances[i] = newDistance;
+                            previous[i] = index;
+                            queue.add(i);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Resultaten afdrukken
+        List<Point> path = new ArrayList<>();
+        int current = 3;
+        while (current != -1) {
+            path.add(input[current]);
+            current = previous[current];
+        }
+
+        System.out.print("Snelste route: ");
+        for (int i = path.size() - 1; i >= 0; i--) {
+            System.out.print("(" + path.get(i).x + "," + path.get(i).y + ")");
+            if (i != 0) {
+                System.out.print(" -> ");
+            }
+        }
+
+        System.out.println("\nTotale afstand: " + distances[3]);
+
+        long endTimer = System.nanoTime();
+        double tijd = (endTimer - startTimer) / 1000000.0;
+        System.out.println("Tijd: " + ( tijd ) + " millisecondes");
+    }
+
+    public static double calcDistance(Point a, Point b) {
+        double x;
+        double y;
+        if (a.getX() >= b.getX()) {
+            x = a.getX() - b.getX();
+        } else {
+            x = b.getX() - a.getX();
+        }
+
+        if (a.getY() >= b.getY()) {
+            y = a.getY() - b.getY();
+        } else {
+            y = b.getY() - a.getY();
+        }
+
+        double distance = Math.sqrt(x *
+                x + y * y);
+        return distance;
+    }
+}
